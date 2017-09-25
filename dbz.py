@@ -32,7 +32,7 @@ def dentro_quadrado(ls, li, p):
     @param p: Ponto a ser avaliado
     @return: True se o ponto estiver dentro do quadrado
     """
-    return ls[0] >= p[0] and ls[1] >= p[1] and li[0] <= p[0] and li[1] <= p[1]
+    return ls[0] <= p[0] and ls[1] <= p[1] and li[0] >= p[0] and li[1] >= p[1]
 
 
 class DragonBallZ:
@@ -48,6 +48,7 @@ class DragonBallZ:
         """
 
         self.agente = agente
+
         self.tamanho = tamanho
 
         if semente is not None:

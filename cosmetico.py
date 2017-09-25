@@ -49,6 +49,7 @@ def executar_jogo(dbz):
         # Desenha o mapa
         for x, i in enumerate(range(-8, 9)):
             for y, j in enumerate(range(-8, 9)):
+
                 p = (dbz.agente_pos[0] + i, dbz.agente_pos[1] + j)
 
         # Range gerado está dentro do mapa?

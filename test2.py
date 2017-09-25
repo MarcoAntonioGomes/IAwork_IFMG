@@ -1,12 +1,9 @@
-if __name__ == "__main__":
+a = list()
 
-    red = list()
-    red.append((3, 4, 3))
-    red.append((2, 1, 2))
-    red.append((5, 1, 5))
-    red.append((2, 1, 2))
+start=[int,int,int,int,int]
 
-    if(red[1] == red[3]):
-        print("E igual")
-    else:
-        print("Ne nao")
+start[0:2] = [1,2,3]
+print(start)
+
+start[3] = 10
+print(start)

@@ -1,3 +1,25 @@
+from random import seed, random
+"""
+lista = (1, 2, 3, 4, 5, 6, 7, 8)
+
+
+i = 0
+while i < len(lista):
+    print(lista[i])
+    i = i + 1
+"""
+"""
+tamanho = 50
+casa_kame = (int(random() * tamanho), int(random() * tamanho))
+
+print(casa_kame)
+
+casa_kame = casa_kame[0] + 3, casa_kame[1]
+
+print(casa_kame)
+"""
+
+
 # start é uma tupla do ponto inicial
 # finish tupla do ponto destino
 # map é o mapa do que Gohan consegue ver
@@ -19,9 +41,17 @@ def FindPath(start, finish, map):
     aberta = list()
     fechada = list()
     vizinho = list()
-    #start[4] = CalculateH(start, finish)
-    #start[5] = 0
+    inicio = CalculateH(start, finish)
+    print(start)
+    print(inicio)
+    start = list(start)
+    start.append(inicio)
+    print(start)
+    start = tuple(start)
+    print(start)
+
     aberta.append(start)
+    print(aberta)
 
     while(1):
         aberta = sorted(aberta, key=lambda x: x[4])
