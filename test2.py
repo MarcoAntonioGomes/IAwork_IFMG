@@ -1,9 +1,18 @@
-a = list()
+"""
+aberta = list()
+aberta.append((1,2,3))
+aberta= sorted(aberta, key = lambda x: x[2])
 
-start=[int,int,int,int,int]
+print(aberta)
+"""
+ranking = list()
+ranking .append((6, 10))
+ranking.append((5, 10))
+ranking.append((7, 9))
+ranking.append((60, 10121))
 
-start[0:2] = [1,2,3]
-print(start)
 
-start[3] = 10
-print(start)
+ranking[1][1]=11
+print(ranking)
+
+

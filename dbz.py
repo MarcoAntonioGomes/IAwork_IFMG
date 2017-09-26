@@ -122,7 +122,8 @@ class DragonBallZ:
                 angulo = degrees(atan2((p[1] - self.agente_pos[1]), (p[0] - self.agente_pos[0])))
 
                 if angulo < 0:
-                    angulo = -angulo + 180
+                    #angulo = -angulo + 180
+                    angulo = angulo +360
 
                 if angulo < 22.5 or angulo > 337.5:
                     radar_direcao["leste"] = 1
