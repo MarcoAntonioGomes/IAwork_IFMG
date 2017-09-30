@@ -1,4 +1,4 @@
-from dbz import DragonballZ
+ from dbz import DragonballZ
 
 
 def escolhedirecao(agente):
@@ -30,135 +30,109 @@ def escolhedirecao(agente):
     ranking = list()
 
     # norte
-    for i in range(3):
-        if mapa[agente_pos[0]][agente_pos[1]-i] == 1
-            custo += 1
-        elif mapa[agente_pos[0] - i][agente_pos[1]-i] == 2
-            custo += 10
-        else:
-            custo += 35
-
-    ranking.append((1, custo))
-    # reseta custo
-    custo = 0
-    # nordeste
-    for i in range(3):
-        if mapa[agente_pos[0]][agente_pos[1]-i] == 1
-            custo += 1
-        elif mapa[agente_pos[0]][agente_pos[1]-i] == 2
-            custo += 10
-        else:
-            custo += 35
-    for i in range(3):
-        if mapa[agente_pos[0]+1][agente_pos[1]] == 1
-            custo += 1
-        elif mapa[agente_pos[0]+i][agente_pos[1]] == 2
-            custo += 10
-        else:
-            custo += 35
-
-    ranking.append((2, custo))
-    # reseta custo
-    custo = 0
-    # leste
-    for i in range(3):
-        if mapa[agente_pos[0]][agente_pos[1] + i] == 1
-            custo += 1
-        elif mapa[agente_pos[0]][agente_pos[1] + i] == 2
-            custo += 10
-        else:
-            custo += 35
-
-    ranking.append((3, custo))
-    # reseta custo
-    custo = 0
-    # suldeste
+    if (radar_direcao["norte" ]== 1):
         for i in range(3):
-        if mapa[agente_pos[0]][agente_pos[1] + i] == 1
-            custo += 1
-        elif mapa[agente_pos[0]][agente_pos[1] + i] == 2
-            custo += 10
-        else:
-            custo += 35
+            if mapa[agente_pos[0]][agente_pos[1]-i] == 1
+                custo += 1
+            elif mapa[agente_pos[0] - i][agente_pos[1]-i] == 2
+                custo += 10
+            else:
+                custo += 35
 
+        ranking.append((1, custo))
+        # reseta custo
+        custo = 0
+    # nordeste
+    if (radar_direcao["nordeste" ]== 1):
+        for i in range(3):
+            if mapa[agente_pos[0]+i][agente_pos[1]-i] == 1
+                custo += 1
+            elif mapa[agente_pos[0]+i][agente_pos[1]-i] == 2
+                custo += 10
+            else:
+                custo += 35
 
-    for i in range(3):
-        if mapa[agente_pos[0] + i][agente_pos[1]] == 1
-            custo += 1
-        elif mapa[agente_pos[0] + i][agente_pos[1]] == 2
-            custo += 10
-        else:
-            custo += 35
+        ranking.append((2, custo))
+        # reseta custo
+        custo = 0
+    # leste
+    if (radar_direcao["leste" ]== 1):
+        for i in range(3):
+            if mapa[agente_pos[0]][agente_pos[1] + i] == 1
+                custo += 1
+            elif mapa[agente_pos[0]][agente_pos[1] + i] == 2
+                custo += 10
+            else:
+                custo += 35
 
+        ranking.append((3, custo))
+        # reseta custo
+        custo = 0
+    # suldeste
+    if (radar_direcao["suldeste" ]== 1):
+        for i in range(3):
+            if mapa[agente_pos[0]+i][agente_pos[1] + i] == 1
+                custo += 1
+            elif mapa[agente_pos[0]+i][agente_pos[1] + i] == 2
+                custo += 10
+            else:
+                custo += 35
 
-
-    ranking.append((4, custo))
-    # reseta custo
-    custo = 0
+        ranking.append((4, custo))
+        # reseta custo
+        custo = 0
     # sul
-    for i in range(3):
-        if mapa[agente_pos[0]][agente_pos[1] +i] == 1
-            custo += 1
-        elif mapa[agente_pos[0]][agente_pos[1] +i] == 2
-            custo += 10
-        else:
-            custo += 35
+    if (radar_direcao["sul" ]== 1):
+        for i in range(3):
+            if mapa[agente_pos[0]][agente_pos[1] +i] == 1
+                custo += 1
+            elif mapa[agente_pos[0]][agente_pos[1] +i] == 2
+                custo += 10
+            else:
+                custo += 35
 
-    ranking.append((5, custo))
-    # reseta custo
-    custo = 0
-    # suldoeste
-    for i in range(3):
-        if mapa[agente_pos[0]][agente_pos[1] +i] == 1
-            custo += 1
-        elif mapa[agente_pos[0]][agente_pos[1] +i] == 2
-            custo += 10
-        else:
-            custo += 35
+        ranking.append((5, custo))
+        # reseta custo
+        custo = 0
+        # suldoeste
+    if (radar_direcao["suldoeste" ]== 1):
+        for i in range(3):
+            if mapa[agente_pos[0]-i][agente_pos[1] +i] == 1
+                custo += 1
+            elif mapa[agente_pos[0]-i][agente_pos[1] +i] == 2
+                custo += 10
+            else:
+                custo += 35
 
-    for i in range(3):
-        if mapa[agente_pos[0]-i][agente_pos[1]] == 1
-            custo += 1
-        elif mapa[agente_pos[0]-i][agente_pos[1]] == 2
-            custo += 10
-        else:
-            custo += 35
+        ranking.append((6, custo))
+        # reseta custo
+        custo = 0
+        # oeste
+    if (radar_direcao["oeste" ]== 1):
+        for i in range(3):
+            if mapa[agente_pos[0] - i][agente_pos[1]] == 1
+                custo += 1
+            elif mapa[agente_pos[0] - i][agente_pos[1]] == 2
+                custo += 10
+            else:
+                custo += 35
 
-    ranking.append((6, custo))
-    # reseta custo
-    custo = 0
-    # oeste
-    for i in range(3):
-        if mapa[agente_pos[0] - i][agente_pos[1]] == 1
-            custo += 1
-        elif mapa[agente_pos[0] - i][agente_pos[1]] == 2
-            custo += 10
-        else:
-            custo += 35
-
-    ranking.append((7, custo))
-    # reseta custo
-    custo = 0
+        ranking.append((7, custo))
+        # reseta custo
+        custo = 0
     # noroeste
-    for i in range(3):
-        if mapa[agente_pos[0] - i][agente_pos[1]] == 1
-            custo += 1
-        elif mapa[agente_pos[0] - i][agente_pos[1]] == 2
-            custo += 10
-        else:
-            custo += 35
+    if (radar_direcao["noroeste" ]== 1):
+        for i in range(3):
+            if mapa[agente_pos[0] - i][agente_pos[1] - i] == 1
+                custo += 1
+            elif mapa[agente_pos[0] - i][agente_pos[1] - i] == 2
+                custo += 10
+            else:
+                custo += 35
 
-    for i in range(3):
-        if mapa[agente_pos[0]][agente_pos[1] - i] == 1
-            custo += 1
-        elif mapa[agente_pos[0]][agente_pos[1] - i] == 2
-            custo += 10
-        else:
-            custo += 35
-
-    ranking.append((8, custo))
-    # reseta custo
-    custo = 0
+        ranking.append((8, custo))
+        # reseta custo
+        custo = 0
 
     # ordena as direções pelo menor peso
     ranking.sort(key=lambda x: x[1])

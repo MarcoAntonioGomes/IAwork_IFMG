@@ -123,7 +123,7 @@ class DragonBallZ:
 
                 if angulo < 0:
                     #angulo = -angulo + 180
-                    angulo = angulo +360
+                    angulo = angulo + 360
 
                 if angulo < 22.5 or angulo > 337.5:
                     radar_direcao["leste"] = 1
@@ -160,6 +160,8 @@ class DragonBallZ:
             "casa-kame": deepcopy(self.casa_kame),
             "esferas": len(self.esferas),
         })
+
+
 
         if type(direcao) is not int or direcao < 1 or direcao > 4:
             raise Exception("Direcao Inválida!")
