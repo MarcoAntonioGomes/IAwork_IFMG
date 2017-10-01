@@ -3,6 +3,7 @@
 from random import seed, random
 from math import sin, cos, sqrt, degrees, atan2
 from copy import deepcopy
+from trabalho import *
 
 """
 IMPLEMENTAÇÃO DO PROBLEMA DE BUSCA POR CAMINHO DBZ
@@ -21,6 +22,7 @@ TERRENO_GRAMA = 1
 TERRENO_AGUA = 2
 TERRENO_MONTANHA = 3
 
+listaDirecao = list()
 
 def dentro_quadrado(ls, li, p):
     """
@@ -101,6 +103,9 @@ class DragonBallZ:
         #
         # COMPUTA AS INFORMAÇÕES DO RADAR
         #
+
+        global listaDirecao
+
         radar_direcao = {
             "norte": 0,
             "sul": 0,
@@ -111,6 +116,7 @@ class DragonBallZ:
             "suldeste": 0,
             "suldoeste": 0
         }
+        print("radar_direcao",radar_direcao)
         radar_proximo = list()
         limite_sup = (self.agente_pos[0] - 3, self.agente_pos[1] - 3)
         limite_inf = (self.agente_pos[0] + 3, self.agente_pos[1] + 3)
@@ -122,12 +128,12 @@ class DragonBallZ:
                 angulo = degrees(atan2((p[1] - self.agente_pos[1]), (p[0] - self.agente_pos[0])))
 
                 if angulo < 0:
-                    #angulo = -angulo + 180
+                    #angulo = -angulo
                     angulo = angulo + 360
 
                 if angulo < 22.5 or angulo > 337.5:
                     radar_direcao["leste"] = 1
-                elif angulo < 67.5:
+                elif angulo < 67.5 :
                     radar_direcao["nordeste"] = 1
                 elif angulo < 112.5:
                     radar_direcao["norte"] = 1
@@ -142,6 +148,8 @@ class DragonBallZ:
                 else:
                     radar_direcao["suldeste"] = 1
 
+                print("RADARRRRRRRRRRRR :",radar_direcao)
+
         # Verifica se o agente voltou para a casa do kame
         if self.custo > 0 and tuple(self.agente_pos) == self.casa_kame:
             if len(self.esferas) > 0:
@@ -152,7 +160,7 @@ class DragonBallZ:
         #
         # INVOCA O AGENTE E VALIDA RETORNO
         #
-        direcao = self.agente({
+        self.agente({
             "pos": deepcopy(self.agente_pos),
             "radar-proximo": radar_proximo,
             "radar-direcao": radar_direcao,
@@ -161,44 +169,91 @@ class DragonBallZ:
             "esferas": len(self.esferas),
         })
 
+        Mat = [None] * 7
+        for i in range(7):
+            Mat[i] = [None] * 7
+
+        for j in range(7):
+            for k in range(7):
+                Mat[j][k] = 99
+
+        for j in range(7):
+            for k in range(7):
+                posZero = self.agente_pos[0] + (j - 3)
+                posUm = self.agente_pos[1] + (k - 3)
+                pos = (posZero, posUm)
+                print(pos)
+                #print(self.agente_pos[0] + (j - 3))
+                #print(self.agente_pos[1] + (k - 3))
+               # print(self.mapa[self.agente_pos[0] + (j - 3)][self.agente_pos[1] + (k - 3)])
+                if(aceito([0,0],[len(self.mapa),len(self.mapa)], pos) == True):
+                    Mat[j][k] = self.mapa[self.agente_pos[0] + (j - 3)][self.agente_pos[1] + (k - 3)]
+
+        if(len(radar_proximo) != 0 and len(listaDirecao) == 0):
+            print("Chama no if")
+            inicio = (self.agente_pos[0], self.agente_pos[1], 0, 0, 0, 0)
+            fim = (radar_proximo[0][0], radar_proximo[0][1], 0, 0, 0, 0)
+            print(fim)
+            listaDirecao = FindPath(inicio, fim, Mat)
+        elif len(listaDirecao) == 0:
+            print("Chama no else")
+            inicio = (self.agente_pos[0], self.agente_pos[1], 0, 0, 0, 0)
+            fim = anda(radar_direcao,self.mapa,self.agente_pos)
+            print("Fim=", fim)
+            fimL = list(fim)
+            fimL.append(0)
+            fimL.append(0)
+            fimL.append(0)
+            fimL.append(0)
+            fim = tuple(fimL)
+
+            listaDirecao = FindPath(inicio, fim, Mat)
+            print(len(listaDirecao))
+            print(listaDirecao)
+
+        if(len(listaDirecao) != 0):
+            direcao = listaDirecao[0]
+            del(listaDirecao[0])
 
 
-        if type(direcao) is not int or direcao < 1 or direcao > 4:
-            raise Exception("Direcao Inválida!")
+            if type(direcao) is not int or direcao < 1 or direcao > 4:
+                raise Exception("Direcao Inválida!")
 
-        if direcao == CIMA and self.agente_pos[1] == 0:
-            raise Exception("Não é possível passar o limite superior do mapa")
+            if direcao == CIMA and self.agente_pos[1] == 0:
+                raise Exception("Não é possível passar o limite superior do mapa")
 
-        if direcao == BAIXO and self.agente_pos[1] == self.tamanho - 1:
-            raise Exception("Não é possível passar o limite inferior do mapa")
+            if direcao == BAIXO and self.agente_pos[1] == self.tamanho - 1:
+                raise Exception("Não é possível passar o limite inferior do mapa")
 
-        if direcao == ESQUERDA and self.agente_pos[0] == 0:
-            raise Exception("Não é possível passar o limite da esquerda no mapa")
+            if direcao == ESQUERDA and self.agente_pos[0] == 0:
+                raise Exception("Não é possível passar o limite da esquerda no mapa")
 
-        if direcao == DIREITA and self.agente_pos[0] == self.tamanho - 1:
-            raise Exception("Não é possível passar o limite da direita no mapa")
+            if direcao == DIREITA and self.agente_pos[0] == self.tamanho - 1:
+                raise Exception("Não é possível passar o limite da direita no mapa")
 
-        # Atualiza custo
-        if self.mapa[self.agente_pos[0]][self.agente_pos[1]] == TERRENO_GRAMA:
-            self.custo += CUSTO_GRAMA
-        elif self.mapa[self.agente_pos[0]][self.agente_pos[1]] == TERRENO_MONTANHA:
-            self.custo += CUSTO_MONTANHA
-        else:
-            self.custo += CUSTO_AGUA
+            # Atualiza custo
+            if self.mapa[self.agente_pos[0]][self.agente_pos[1]] == TERRENO_GRAMA:
+                self.custo += CUSTO_GRAMA
+            elif self.mapa[self.agente_pos[0]][self.agente_pos[1]] == TERRENO_MONTANHA:
+                self.custo += CUSTO_MONTANHA
+            else:
+                self.custo += CUSTO_AGUA
 
-        # Atualiza posição do agente
-        if direcao == CIMA:
-            self.agente_pos[1] -= 1
-        elif direcao == BAIXO:
-            self.agente_pos[1] += 1
-        elif direcao == ESQUERDA:
-            self.agente_pos[0] -= 1
-        else:
-            self.agente_pos[0] += 1
+            # Atualiza posição do agente
+            if direcao == CIMA:
+                self.agente_pos[1] -= 1
+            elif direcao == BAIXO:
+                self.agente_pos[1] += 1
+            elif direcao == ESQUERDA:
+                self.agente_pos[0] -= 1
+            else:
+                self.agente_pos[0] += 1
 
-        # Verifica se o agente encontrou uma esfera do dragão
-        if tuple(self.agente_pos) in self.esferas:
-            self.esferas.remove(tuple(self.agente_pos))
+            # Verifica se o agente encontrou uma esfera do dragão
+            if tuple(self.agente_pos) in self.esferas:
+                self.esferas.remove(tuple(self.agente_pos))
 
-        # Incrementa iteracao
-        self.iteracao += 1
+            # Incrementa iteracao
+            self.iteracao += 1
+
+        print("Fez iteração")
