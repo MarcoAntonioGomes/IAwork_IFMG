@@ -22,7 +22,7 @@ def executar_jogo(dbz):
     gohan = image.load(path.join("gohan.png"))
     kame_house = image.load(path.join("kame_house.png"))
     sphere = image.load(path.join("sphere.png"))
-    screen = display.set_mode((800, 800), 0, 32)
+    screen = display.set_mode((600, 600), 0, 32)
     delay = 150
     clock = time.Clock()
 

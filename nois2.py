@@ -1,3 +1,7 @@
-class pessoa(object):
+for i in range (50):
+    for j in range (50):
+        Mat[i][j] = " "
 
-    def __init__(self, nome, data_de_nascimento, altura):
+for i in range (50):
+    for j in range (50):
+        print(Mat[i][j])

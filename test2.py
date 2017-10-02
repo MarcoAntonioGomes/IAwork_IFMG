@@ -1,33 +1,305 @@
+ #!/usr/bin/python3
+
+from random import seed, random
+from math import sin, cos, sqrt, degrees, atan2
+from copy import deepcopy
+from trabalho import *
+
 """
-aberta = list()
-aberta.append((1,2,3))
-aberta= sorted(aberta, key = lambda x: x[2])
-
-print(aberta)
+IMPLEMENTAÇÃO DO PROBLEMA DE BUSCA POR CAMINHO DBZ
 """
-ranking = list()
-ranking .append((6, 10))
-ranking.append((5, 10))
-ranking.append((7, 9))
-ranking.append((60, 10121))
 
-order = list()
+CIMA = 1
+BAIXO = 2
+ESQUERDA = 3
+DIREITA = 4
 
-order.append((7, 2, 6))
-order.append((7, 10, 7))
-order.append((5, 10, 9))
+CUSTO_GRAMA = 1
+CUSTO_AGUA = 10
+CUSTO_MONTANHA = 35
 
-if order.sort(key=lambda x=(x[0], x[1]) in ranking:
-    print("Hello World")
-order.sort(key=lambda x: (x[0], x[1]))
-print(order)
-# a=lambda x, y: (1, 2)
-# print(a)
-# print((order[2] in ranking))
+TERRENO_GRAMA = 1
+TERRENO_AGUA = 2
+TERRENO_MONTANHA = 3
+
+listaDirecao = list()
+
+def dentro_quadrado(ls, li, p):
+    """
+    Verifica se o ponto p está dentro do
+    quadrado formado formado por ls e li
+
+    @param ls: Limite Superior do quadrado
+    @param li: Limite Inferior do quadrado
+    @param p: Ponto a ser avaliado
+    @return: True se o ponto estiver dentro do quadrado
+    """
+    return ls[0] <= p[0] and ls[1] <= p[1] and li[0] >= p[0] and li[1] >= p[1]
 
 
-def listaDirecao(fechada):
-    for x in  range(len(fechada)-1):
-        if(fechada[x][0] =)
+class DragonBallZ:
+    """Classe de controle do problema"""
 
-    return (x, y)
+    def __init__(self, agente, tamanho=50, semente=None):
+        """
+        Construtor da classe
+
+        @param agente: Função do Agente
+        @param tamanho: Tamanho do mapa
+        @param semente: Semente aleatória (None utiliza a semente default)
+        """
+
+        self.agente = agente
+
+        self.tamanho = tamanho
+
+        if semente is not None:
+            seed(semente)
+
+        #
+        # PASSO 1: GERA A POSIÇÃO NO MAPA DAS ESFERAS E DA CASA DO KAME
+        #
+        self.casa_kame = (int(random() * tamanho), int(random() * tamanho))
+        self.esferas = list()
+
+        # Gera a posição das esferas
+        #TEM QUE MUDAR
+        while len(self.esferas) < 7:
+            pos = (int(random() * tamanho), int(random() * tamanho))
+
+            if pos != self.casa_kame and pos not in self.esferas:
+                self.esferas.append(pos)
+
+        #
+        # PASSO 2: GERA O MAPA
+        #
+        termos = [random() for _ in range(6)]
+        self.mapa = [[None] * tamanho for _ in range(tamanho)]
+
+        for x in range(tamanho):
+            for y in range(tamanho):
+                z = sin(termos[0] * x**2 + termos[1] * y + termos[2]) + cos(termos[3] * y**2 + termos[4] * x + termos[5])
+
+                if z < -.5:
+                    self.mapa[x][y] = 1
+                elif z < .5:
+                    self.mapa[x][y] = 2
+                else:
+                    self.mapa[x][y] = 3
+
+        #
+        # PASSO 3: INICIALIZA POSIÇÃO INICIAL DO AGENTE E CONTADOR DE ITERAÇÕES
+        #
+        self.agente_pos = list(self.casa_kame)
+        self.iteracao = 0
+        self.custo = 0
+
+    def executar(self):
+        """
+        Executa uma iteração do problema,
+        a implementação será uma list comprehension
+        para facilitar no uso da GUI
+        """
+
+        #
+        # COMPUTA AS INFORMAÇÕES DO RADAR
+        #
+
+        global listaDirecao
+
+        radar_direcao = {
+            "norte": 0,
+            "sul": 0,
+            "leste": 0,
+            "oeste": 0,
+            "nordeste": 0,
+            "noroeste": 0,
+            "suldeste": 0,
+            "suldoeste": 0
+        }
+       # print("radar_direcao",radar_direcao)
+        radar_proximo = list()
+        limite_sup = (self.agente_pos[0] - 3, self.agente_pos[1] - 3)
+        limite_inf = (self.agente_pos[0] + 3, self.agente_pos[1] + 3)
+
+        for p in self.esferas:
+            if dentro_quadrado(limite_sup, limite_inf, p):
+
+             radar_proximo.append(p)
+            else:
+                angulo = degrees(atan2((p[1] - self.agente_pos[1]), (p[0] - self.agente_pos[0])))
+
+                if angulo < 0:
+                    #angulo = -angulo
+                    angulo = angulo + 360
+
+                if angulo < 22.5 or angulo > 337.5:
+                    #leste
+                    radar_direcao["leste"] = 1
+                elif angulo < 67.5 :
+                    #nordeste
+                    radar_direcao["suldeste"] = 1
+                elif angulo < 112.5:
+                    #norte
+                    radar_direcao["sul"] = 1
+                elif angulo < 157.5:
+                    #noroeste
+                    radar_direcao["suldoeste"] = 1
+                elif angulo < 202.5:
+                    #oeste
+                    radar_direcao["oeste"] = 1
+                elif angulo < 247.5:
+                    #suldoeste
+                    radar_direcao["noroeste"] = 1
+                elif angulo < 292.5:
+                    #sul
+                    radar_direcao["norte"] = 1
+                else:
+                    #suldeste
+                    radar_direcao["nordeste"] = 1
+
+                print("RADARRRRRRRRRRRR :",radar_direcao)
+
+        # Verifica se o agente voltou para a casa do kame
+        if self.custo > 0 and tuple(self.agente_pos) == self.casa_kame:
+            if len(self.esferas) > 0:
+                raise Exception("O Objetivo do jogo não foi cumprido!")
+            else:
+                raise Exception("Você pegou todas as esferas!\nCusto Total: %d\nCusto/Iteração: %g" % (self.custo, float(self.custo) / self.iteracao))
+
+        #
+        # INVOCA O AGENTE E VALIDA RETORNO
+        #
+        self.agente({
+            "pos": deepcopy(self.agente_pos),
+            "radar-proximo": radar_proximo,
+            "radar-direcao": radar_direcao,
+            "mapa": deepcopy(self.mapa),
+            "casa-kame": deepcopy(self.casa_kame),
+            "esferas": len(self.esferas),
+
+        })
+
+        Mat = [None] * 7
+        for i in range(7):
+            Mat[i] = [None] * 7
+
+        for j in range(7):
+            for k in range(7):
+                Mat[j][k] = 99
+
+        for j in range(7):
+            for k in range(7):
+                posZero = self.agente_pos[0] + (j - 3)
+                posUm = self.agente_pos[1] + (k - 3)
+                pos = (posZero, posUm)
+                #print(pos)
+
+               # print(self.mapa[self.agente_pos[0] + (j - 3)][self.agente_pos[1] + (k - 3)])
+                if(aceito([0,0],[len(self.mapa) - 1,len(self.mapa) - 1], pos) == True):
+                    Mat[j][k] = self.mapa[self.agente_pos[0] + (j - 3)][self.agente_pos[1] + (k - 3)]
+
+        if(len(radar_proximo) != 0 and len(listaDirecao) == 0):
+            listaDirecao = list()
+            inicio = (self.agente_pos[0], self.agente_pos[1], 0, 0, 0, 0)
+            fim = (radar_proximo[0][0], radar_proximo[0][1], 0, 0, 0, 0)
+            #print("Destino: ",fim)
+            listaDirecao = FindPath(inicio, fim, Mat)
+        elif len(listaDirecao) == 0:
+            inicio = (self.agente_pos[0], self.agente_pos[1], 0, 0, 0, 0)
+            fim = Anda(radar_direcao,self.agente_pos,self.mapa)
+            fimL = list(fim)
+            fimL.append(0)
+            fimL.append(0)
+            fimL.append(0)
+            fimL.append(0)
+            fim = tuple(fimL)
+
+            listaDirecao = FindPath(inicio, fim, Mat)
+            #print(len(listaDirecao))
+            print(listaDirecao)
+
+        if(len(listaDirecao) != 0):
+            direcao = listaDirecao[0]
+            del(listaDirecao[0])
+
+
+            if type(direcao) is not int or direcao < 1 or direcao > 4:
+                raise Exception("Direcao Inválida!")
+
+            if direcao == CIMA and self.agente_pos[1] == 0:
+                raise Exception("Não é possível passar o limite superior do mapa")
+
+            if direcao == BAIXO and self.agente_pos[1] == self.tamanho - 1:
+                raise Exception("Não é possível passar o limite inferior do mapa")
+
+            if direcao == ESQUERDA and self.agente_pos[0] == 0:
+                raise Exception("Não é possível passar o limite da esquerda no mapa")
+
+            if direcao == DIREITA and self.agente_pos[0] == self.tamanho - 1:
+                raise Exception("Não é possível passar o limite da direita no mapa")
+
+            # Atualiza custo
+            if self.mapa[self.agente_pos[0]][self.agente_pos[1]] == TERRENO_GRAMA:
+                self.custo += CUSTO_GRAMA
+            elif self.mapa[self.agente_pos[0]][self.agente_pos[1]] == TERRENO_MONTANHA:
+                self.custo += CUSTO_MONTANHA
+            else:
+                self.custo += CUSTO_AGUA
+
+            # Atualiza posição do agente
+            if direcao == CIMA:
+                self.agente_pos[1] -= 1
+            elif direcao == BAIXO:
+                self.agente_pos[1] += 1
+            elif direcao == ESQUERDA:
+                self.agente_pos[0] -= 1
+            else:
+                self.agente_pos[0] += 1
+
+            # Verifica se o agente encontrou uma esfera do dragão
+            if tuple(self.agente_pos) in self.esferas:
+                self.esferas.remove(tuple(self.agente_pos))
+
+            # Incrementa iteracao
+            self.iteracao += 1
+            print(self.esferas, "Boneco=", self.agente_pos)
+            if self.esferas == []:
+
+            for p in self.casa_kame:
+              if dentro_quadrado(limite_sup, limite_inf, p):
+                radar_proximo.append(p)
+              else:
+                angulo = degrees(atan2((p[1] - self.agente_pos[1]), (p[0] - self.agente_pos[0])))
+
+                if angulo < 0:
+                    #angulo = -angulo
+                    angulo = angulo + 360
+
+                if angulo < 22.5 or angulo > 337.5:
+                    #leste
+                    radar_direcao["leste"] = 1
+                elif angulo < 67.5 :
+                    #nordeste
+                    radar_direcao["suldeste"] = 1
+                elif angulo < 112.5:
+                    #norte
+                    radar_direcao["sul"] = 1
+                elif angulo < 157.5:
+                    #noroeste
+                    radar_direcao["suldoeste"] = 1
+                elif angulo < 202.5:
+                    #oeste
+                    radar_direcao["oeste"] = 1
+                elif angulo < 247.5:
+                    #suldoeste
+                    radar_direcao["noroeste"] = 1
+                elif angulo < 292.5:
+                    #sul
+                    radar_direcao["norte"] = 1
+                else:
+                    #suldeste
+                    radar_direcao["nordeste"] = 1
+
+            Anda(radar_direcao,self.agente_pos,self.mapa)
+            #radar_direcao,self.agente_pos,self.mapa

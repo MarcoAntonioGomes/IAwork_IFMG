@@ -63,6 +63,7 @@ class DragonBallZ:
         self.esferas = list()
 
         # Gera a posição das esferas
+        #TEM QUE MUDAR
         while len(self.esferas) < 7:
             pos = (int(random() * tamanho), int(random() * tamanho))
 
@@ -116,14 +117,50 @@ class DragonBallZ:
             "suldeste": 0,
             "suldoeste": 0
         }
-        print("radar_direcao",radar_direcao)
+       # print("radar_direcao",radar_direcao)
         radar_proximo = list()
         limite_sup = (self.agente_pos[0] - 3, self.agente_pos[1] - 3)
         limite_inf = (self.agente_pos[0] + 3, self.agente_pos[1] + 3)
 
+        if (len(self.esferas) == 0):
+            if dentro_quadrado(limite_sup, limite_inf, self.casa_kame):
+                radar_proximo.append(self.casa_kame)
+            else:
+                angulo = degrees(
+                    atan2((self.casa_kame[1] - self.agente_pos[1]), (self.casa_kame[0] - self.agente_pos[0])))
+
+                if angulo < 0:
+                    # angulo = -angulo
+                    angulo = angulo + 360
+
+                if angulo < 22.5 or angulo > 337.5:
+                    # leste
+                    radar_direcao["leste"] = 1
+                elif angulo < 67.5:
+                    # nordeste
+                    radar_direcao["suldeste"] = 1
+                elif angulo < 112.5:
+                    # norte
+                    radar_direcao["sul"] = 1
+                elif angulo < 157.5:
+                    # noroeste
+                    radar_direcao["suldoeste"] = 1
+                elif angulo < 202.5:
+                    # oeste
+                    radar_direcao["oeste"] = 1
+                elif angulo < 247.5:
+                    # suldoeste
+                    radar_direcao["noroeste"] = 1
+                elif angulo < 292.5:
+                    # sul
+                    radar_direcao["norte"] = 1
+                else:
+                    # suldeste
+                    radar_direcao["nordeste"] = 1
+
         for p in self.esferas:
             if dentro_quadrado(limite_sup, limite_inf, p):
-                radar_proximo.append(p)
+             radar_proximo.append(p)
             else:
                 angulo = degrees(atan2((p[1] - self.agente_pos[1]), (p[0] - self.agente_pos[0])))
 
@@ -132,21 +169,29 @@ class DragonBallZ:
                     angulo = angulo + 360
 
                 if angulo < 22.5 or angulo > 337.5:
+                    #leste
                     radar_direcao["leste"] = 1
                 elif angulo < 67.5 :
-                    radar_direcao["nordeste"] = 1
+                    #nordeste
+                    radar_direcao["suldeste"] = 1
                 elif angulo < 112.5:
-                    radar_direcao["norte"] = 1
+                    #norte
+                    radar_direcao["sul"] = 1
                 elif angulo < 157.5:
-                    radar_direcao["noroeste"] = 1
+                    #noroeste
+                    radar_direcao["suldoeste"] = 1
                 elif angulo < 202.5:
+                    #oeste
                     radar_direcao["oeste"] = 1
                 elif angulo < 247.5:
-                    radar_direcao["suldoeste"] = 1
+                    #suldoeste
+                    radar_direcao["noroeste"] = 1
                 elif angulo < 292.5:
-                    radar_direcao["sul"] = 1
+                    #sul
+                    radar_direcao["norte"] = 1
                 else:
-                    radar_direcao["suldeste"] = 1
+                    #suldeste
+                    radar_direcao["nordeste"] = 1
 
                 print("RADARRRRRRRRRRRR :",radar_direcao)
 
@@ -167,6 +212,7 @@ class DragonBallZ:
             "mapa": deepcopy(self.mapa),
             "casa-kame": deepcopy(self.casa_kame),
             "esferas": len(self.esferas),
+
         })
 
         Mat = [None] * 7
@@ -182,24 +228,21 @@ class DragonBallZ:
                 posZero = self.agente_pos[0] + (j - 3)
                 posUm = self.agente_pos[1] + (k - 3)
                 pos = (posZero, posUm)
-                print(pos)
-                #print(self.agente_pos[0] + (j - 3))
-                #print(self.agente_pos[1] + (k - 3))
+                #print(pos)
+
                # print(self.mapa[self.agente_pos[0] + (j - 3)][self.agente_pos[1] + (k - 3)])
-                if(aceito([0,0],[len(self.mapa),len(self.mapa)], pos) == True):
+                if(aceito([0,0],[len(self.mapa) - 1,len(self.mapa) - 1], pos) == True):
                     Mat[j][k] = self.mapa[self.agente_pos[0] + (j - 3)][self.agente_pos[1] + (k - 3)]
 
         if(len(radar_proximo) != 0 and len(listaDirecao) == 0):
-            print("Chama no if")
+            listaDirecao = list()
             inicio = (self.agente_pos[0], self.agente_pos[1], 0, 0, 0, 0)
             fim = (radar_proximo[0][0], radar_proximo[0][1], 0, 0, 0, 0)
-            print(fim)
+            #print("Destino: ",fim)
             listaDirecao = FindPath(inicio, fim, Mat)
         elif len(listaDirecao) == 0:
-            print("Chama no else")
             inicio = (self.agente_pos[0], self.agente_pos[1], 0, 0, 0, 0)
-            fim = anda(radar_direcao,self.mapa,self.agente_pos)
-            print("Fim=", fim)
+            fim = Anda(radar_direcao,self.agente_pos,self.mapa)
             fimL = list(fim)
             fimL.append(0)
             fimL.append(0)
@@ -208,7 +251,7 @@ class DragonBallZ:
             fim = tuple(fimL)
 
             listaDirecao = FindPath(inicio, fim, Mat)
-            print(len(listaDirecao))
+            #print(len(listaDirecao))
             print(listaDirecao)
 
         if(len(listaDirecao) != 0):
@@ -255,5 +298,9 @@ class DragonBallZ:
 
             # Incrementa iteracao
             self.iteracao += 1
+            print(self.esferas, "Boneco=", self.agente_pos)
 
-        print("Fez iteração")
+
+
+
+

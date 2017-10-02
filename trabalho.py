@@ -1,5 +1,7 @@
+buffer = ""
 
 def converter(start, finish):
+    print("Start=", start, "Finish=", finish)
     fin = list(finish)
     fin[0] = finish[0] - start[0] + 3
     fin[1] = finish[1] - start[1] + 3
@@ -46,7 +48,9 @@ def listaDirecao(fechada):
     return direcao
 
 def FindPath(start, finish, map):
+    print("Start=", start, "Finish=", finish)
     finish = converter(start, finish)
+    print("Finish=", finish)
     inn = (3,3,0,0,0,0)
     aberta = list()
     fechada = list()
@@ -108,199 +112,232 @@ def aceito(limite_superior,limite_inferior,p):
         return False
 
 
+def Direcao(radar):
+    global buffer
 
-def escolhedirecao(mapa,radar_direcao,agente_pos):
-    """
-    algoritmo passa a direção e o peso
-    (dir,peso). Ex : [(1,10), (2,35)]
-    uma lista ordena  pelo menor peso e vai passando
-    ----------------------------------------
-    1 = norte
-    2 = nordeste
-    3 = leste
-    4 = suldeste
-    5 = sul
-    6 = suldoeste
-    7 = oeste
-    8 = noroeste
+    if(buffer == ""):
+        if(radar["norte"] == 1):
+            buffer = "norte"
+        if(radar["nordeste"] == 1):
+            buffer = "nordeste"
+        if(radar["leste"] == 1):
+            buffer = "leste"
+        if(radar["suldeste"] == 1):
+            buffer = "suldeste"
+        if(radar["sul"] == 1):
+            buffer = "sul"
+        if(radar["suldoeste"] == 1):
+            buffer = "suldoeste"
+        if(radar["oeste"] == 1):
+            buffer = "oeste"
+        if(radar["noroeste"] == 1):
+            buffer = "noroeste"
 
-    -----------------------------------------
-    norte pega as 3 casas a cima da pos atual
-    nordeste pega em L ou seja 3 para a direita e 3 para cima 3 ou 3 para cima e 3 para o lado
-    leste 3 para direita
-    suldeste em L  3 para direita e 3 para baixo ou 3 p baixo 3 p direita
-    sul 3 p baixo
-    suldoeste 3 p esquerda 3 p baixo ou 3 p baixo e 3 p esquerda
-    oeste 3 p esquerda
-    noroeste 3 p esquerda e 3 p cima, ou 3 p cima e 3 p esquerda
-    """
-    # lista de tuplas
-    ranking = list()
-    custo = 0
-    # norte
-    if (radar_direcao["sul"]== 1):
-        for i in range(3):
-            if mapa[agente_pos[0]][agente_pos[1]-i] == 1 :
-                custo += 1
-            elif mapa[agente_pos[0] - i][agente_pos[1]-i] == 2:
-                custo += 10
-            else:
-                custo += 35
+    if(buffer == "norte"):
+        if(radar["norte"] == 1):
+            buffer = "norte"
+            return buffer
 
-        ranking.append((1, custo))
-        # reseta custo
-        custo = 0
-    # nordeste
-    if (radar_direcao["nordeste" ]== 1):
-        for i in range(3):
-            if mapa[agente_pos[0]+i][agente_pos[1]-i] == 1:
-                custo += 1
-            elif mapa[agente_pos[0]+i][agente_pos[1]-i] == 2:
-                custo += 10
-            else:
-                custo += 35
+        if(radar["nordeste"] == 1):
+            buffer = "nordeste"
+            return buffer
 
-        ranking.append((2, custo))
-        # reseta custo
-        custo = 0
-    # leste
-    if (radar_direcao["leste" ]== 1):
-        for i in range(3):
-            if mapa[agente_pos[0]][agente_pos[1] + i] == 1:
-                custo += 1
-            elif mapa[agente_pos[0]][agente_pos[1] + i] == 2:
-                custo += 10
-            else:
-                custo += 35
+        if(radar["noroeste"] == 1):
+            buffer = "noroeste"
+            return buffer
 
-        ranking.append((3, custo))
-        # reseta custo
-        custo = 0
-    # suldeste
-    if (radar_direcao["suldeste" ]== 1):
-        for i in range(3):
-            if mapa[agente_pos[0]+i][agente_pos[1] + i] == 1:
-                custo += 1
-            elif mapa[agente_pos[0]+i][agente_pos[1] + i] == 2:
-                custo += 10
-            else:
-                custo += 35
+    if(buffer == "nordeste"):
+        if(radar["nordeste"] == 1):
+            buffer = "nordeste"
+            return buffer
 
-        ranking.append((4, custo))
-        # reseta custo
-        custo = 0
-    # sul
-    if (radar_direcao["norte" ]== 1):
-        for i in range(3):
-            if mapa[agente_pos[0]][agente_pos[1] +i] == 1:
-                custo += 1
-            elif mapa[agente_pos[0]][agente_pos[1] +i] == 2:
-                custo += 10
-            else:
-                custo += 35
+        if(radar["leste"] == 1):
+            buffer = "leste"
+            return buffer
 
-        ranking.append((5, custo))
-        # reseta custo
-        custo = 0
-        # suldoeste
-    if (radar_direcao["suldoeste" ]== 1):
-        for i in range(3):
-            if mapa[agente_pos[0]-i][agente_pos[1] +i] == 1:
-                custo += 1
-            elif mapa[agente_pos[0]-i][agente_pos[1] +i] == 2:
-                custo += 10
-            else:
-                custo += 35
+        if(radar["norte"] == 1):
+            buffer = "norte"
+            return buffer
 
-        ranking.append((6, custo))
-        # reseta custo
-        custo = 0
-        # oeste
-    if (radar_direcao["oeste" ]== 1):
-        for i in range(3):
-            if mapa[agente_pos[0] - i][agente_pos[1]] == 1:
-                custo += 1
-            elif mapa[agente_pos[0] - i][agente_pos[1]] == 2:
-                custo += 10
-            else:
-                custo += 35
+    if(buffer == "leste"):
+        if(radar["leste"] == 1):
+            buffer = "leste"
+            return buffer
 
-        ranking.append((7, custo))
-        # reseta custo
-        custo = 0
-    # noroeste
-    if (radar_direcao["noroeste" ]== 1):
-        for i in range(3):
-            if mapa[agente_pos[0] - i][agente_pos[1] - i] == 1:
-                custo += 1
-            elif mapa[agente_pos[0] - i][agente_pos[1] - i] == 2:
-                custo += 10
-            else:
-                custo += 35
+        if(radar["nordeste"] == 1):
+            buffer = "nordeste"
+            return buffer
 
-        ranking.append((8, custo))
-        # reseta custo
-        custo = 0
+        if(radar["suldeste"] == 1):
+            buffer = "suldeste"
+            return buffer
 
-    # ordena as direções pelo menor peso
-    ranking.sort(key=lambda x: x[1])
+    if(buffer == "suldeste"):
+        if(radar["suldeste"] == 1):
+            buffer = "suldeste"
+            return buffer
 
-    #escolhe direcao
-    if ranking[0][0] == 1 :
-        direcao = "norte"
-    elif ranking [0][0] == 2:
-        direcao = "nordeste"
-    elif ranking [0][0] == 3:
-        direcao = "leste"
-    elif ranking [0][0] == 4:
-        direcao = "suldeste"
-    elif ranking [0][0] == 5:
-        direcao = "sul"
-    elif ranking [0][0] == 6:
-        direcao = "suldoeste"
-    elif ranking [0][0] == 7:
-        direcao = "oeste"
-    elif ranking [0][0] == 8:
-        direcao = "nordeste"
-    else:
-        direcao = "erro"
+        if(radar["leste"] == 1):
+            buffer = "leste"
+            return buffer
 
-    #retorna direcao escolhida
-    return direcao
+        if(radar["sul"] == 1):
+            buffer = "sul"
+            return buffer
+
+    if(buffer == "sul"):
+        if(radar["sul"] == 1):
+            buffer = "sul"
+            return buffer
+
+        if(radar["suldeste"] == 1):
+            buffer = "suldeste"
+            return buffer
+
+        if(radar["suldoeste"] == 1):
+            buffer = "suldoeste"
+            return buffer
+
+    if(buffer == "suldoeste"):
+        if(radar["suldoeste"] == 1):
+            buffer = "suldoeste"
+            return buffer
+
+        if(radar["sul"] == 1):
+            buffer = "sul"
+            return buffer
+
+        if(radar["oeste"] == 1):
+            buffer = "oeste"
+            return buffer
+
+    if(buffer == "oeste"):
+        if(radar["oeste"] == 1):
+            buffer = "oeste"
+            return buffer
+
+        if(radar["suldoeste"] == 1):
+            buffer = "suldoeste"
+            return buffer
+
+        if(radar["noroeste"] == 1):
+            buffer = "noroeste"
+            return buffer
+
+    if(buffer == "noroeste"):
+        if(radar["noroeste"] == 1):
+            buffer = "noroeste"
+            return buffer
+
+        if(radar["oeste"] == 1):
+            buffer = "oeste"
+            return buffer
+
+        if(radar["norte"] == 1):
+            buffer = "norte"
+            return buffer
+
+    if(radar["norte"] == 1):
+        buffer = "norte"
+        return buffer
+    if(radar["nordeste"] == 1):
+        buffer = "nordeste"
+        return buffer
+    if(radar["leste"] == 1):
+        buffer = "leste"
+        return buffer
+    if(radar["suldeste"] == 1):
+        buffer = "suldeste"
+        return buffer
+    if(radar["sul"] == 1):
+        buffer = "sul"
+        return buffer
+    if(radar["suldoeste"] == 1):
+        buffer = "suldoeste"
+        return buffer
+    if(radar["oeste"] == 1):
+         buffer = "oeste"
+         return buffer
+    if(radar["noroeste"] == 1):
+        buffer = "noroeste"
+        return buffer
+
+def Anda(radar, agentePos, mapa):
+    dir = Direcao(radar)
+    print("Entra na funcao=", agentePos)
+    print("Dir=", dir)
+    pos = list()
+    pos.append(5)
+    pos.append(5)
+    i = 3
+
+    if(dir == "norte"):
+        while(True):
+            pos[0] = agentePos[0]
+            pos[1] = agentePos[1] - i
+            i = i - 1
+            if(aceito([0,0], [len(mapa) - 1, len(mapa) - 1], agentePos)):
+                break
+
+    if(dir == "nordeste"):
+        while(True):
+            pos[0] = agentePos[0] + i
+            pos[1] = agentePos[1] - i
+            i = i - 1
+            if(aceito([0,0], [len(mapa) - 1, len(mapa) - 1], agentePos)):
+                break
+
+    if(dir == "leste"):
+        while(True):
+            pos[0] = agentePos[0] + i
+            pos[1] = agentePos[1]
+            i = i - 1
+            if(aceito([0,0], [len(mapa) - 1, len(mapa) - 1], agentePos)):
+                break
+
+    if(dir == "suldeste"):
+        while(True):
+            pos[0] = agentePos[0] + i
+            pos[1] = agentePos[1] + i
+            i = i - 1
+            if(aceito([0,0], [len(mapa) - 1, len(mapa) - 1], agentePos)):
+                break
+
+    if(dir == "sul"):
+        while(True):
+            pos[0] = agentePos[0]
+            pos[1] = agentePos[1] + i
+            i = i - 1
+            if(aceito([0,0], [len(mapa) - 1, len(mapa) - 1], agentePos)):
+                break
+
+    if(dir == "suldoeste"):
+        while(True):
+            pos[0] = agentePos[0] - i
+            pos[1] = agentePos[1] + i
+            i = i - 1
+            if(aceito([0,0], [len(mapa) - 1, len(mapa) - 1], agentePos)):
+                break
+
+    if(dir == "oeste"):
+        while(True):
+            pos[0] = agentePos[0] - i
+            pos[1] = agentePos[1]
+            i = i - 1
+            if(aceito([0,0], [len(mapa) - 1, len(mapa) - 1], agentePos)):
+                break
+
+    if(dir == "noroeste"):
+        while(True):
+            pos[0] = agentePos[0] - i
+            pos[1] = agentePos[1] - i
+            i = i - 1
+            if(aceito([0,0], [len(mapa) - 1, len(mapa) - 1], agentePos)):
+                break
 
 
-def anda(radar_direcao,mapa,agente_pos):
+    print("Sai da funcao=", agentePos)
+    return tuple(pos)
 
-    while(True):
-        #escolhe direcao
-        direcao = escolhedirecao(mapa,radar_direcao,agente_pos)
-        print("Direcao=", direcao)
-        print("agente=", agente_pos)
-        #anda a direcao
-        if direcao == "norte":
-            pos=agente_pos[0], agente_pos[1] - 3
-        elif direcao == "sul":
-            pos=agente_pos[0], agente_pos[1] + 3
-        elif direcao == "leste":
-            pos=agente_pos[0] + 3, agente_pos[1]
-        elif direcao == "oeste":
-            pos=agente_pos[0] - 3, agente_pos[1]
-        elif direcao == "nordeste":
-            pos=agente_pos[0] + 3, agente_pos[1] - 3
-        elif direcao == "noroeste":
-            pos=agente_pos[0] - 3, agente_pos[1] - 3
-        elif direcao == "suldeste":
-            pos=agente_pos[0] + 3, agente_pos[1] + 3
-        elif direcao == "suldoeste":
-            pos=agente_pos[0] - 3, agente_pos[1] + 3
-        else:
-            raise Exception("Erro ao passar a direcao com menor caminho")
 
-        posfinal = pos
-        print("posFinal=", posfinal)
 
-        if(aceito([0,0],[len(mapa),len(mapa)],posfinal) == True):
-            print("brecou")
-            break
-
-    return posfinal
