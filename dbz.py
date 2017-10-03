@@ -243,13 +243,16 @@ class DragonBallZ:
         elif len(listaDirecao) == 0:
             inicio = (self.agente_pos[0], self.agente_pos[1], 0, 0, 0, 0)
             fim = Anda(radar_direcao,self.agente_pos,self.mapa)
+            print("Primeiro fim=", fim)
+            fim = Otimizar(fim, self.mapa)
+            print("Segundo fim=", fim)
             fimL = list(fim)
             fimL.append(0)
             fimL.append(0)
             fimL.append(0)
             fimL.append(0)
             fim = tuple(fimL)
-
+            print("peso=", self.mapa[fim[0]][fim[1]])
             listaDirecao = FindPath(inicio, fim, Mat)
             #print(len(listaDirecao))
             print(listaDirecao)
